@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "z-quiz.ngApp", "z-quiz.ngAp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "z-quiz.api", "z-quiz.api\z-quiz.api.csproj", "{9659168C-F249-4E2A-B558-D814F0A0EE6B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "z-quiz.apiTests", "z-quiz.apiTests\z-quiz.apiTests.csproj", "{5EEB2BAB-B9C8-4934-AA15-67EEAA7C8800}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{9659168C-F249-4E2A-B558-D814F0A0EE6B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9659168C-F249-4E2A-B558-D814F0A0EE6B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9659168C-F249-4E2A-B558-D814F0A0EE6B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5EEB2BAB-B9C8-4934-AA15-67EEAA7C8800}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5EEB2BAB-B9C8-4934-AA15-67EEAA7C8800}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5EEB2BAB-B9C8-4934-AA15-67EEAA7C8800}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5EEB2BAB-B9C8-4934-AA15-67EEAA7C8800}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
