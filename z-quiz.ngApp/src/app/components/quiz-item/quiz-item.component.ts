@@ -1,5 +1,5 @@
-﻿import { Component, OnInit, Input } from '@angular/core';
-import { Question } from '../../models/question';
+﻿import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Question, Choice } from '../../models/question';
 
 @Component({
     selector: 'app-quiz-item',
@@ -9,10 +9,17 @@ import { Question } from '../../models/question';
 export class QuizItemComponent implements OnInit {
     @Input() question: Question;
     @Input() itemNo: number;
+    @Input() answer: Choice;
+    @Output() answerChange: EventEmitter<Choice> = new EventEmitter < Choice> ();
 
     constructor() { }
 
     ngOnInit() {
+    }
+
+    choiceClick(ans: Choice) {
+        this.answer = ans;
+        this.answerChange.emit(ans);
     }
 
 }

@@ -11,50 +11,25 @@ export class Choice {
     public score: number;
 }
 
-export const MockQuestions: Question[] = [
-    {
-        id: 1, description: 'Question 1', choices: [
-            { id: 1, description: 'choice 1 of question 1', order: 1, score: 2 },
-            { id: 1, description: 'choice 1 of question 1', order: 1, score: 2 },
-            { id: 1, description: 'choice 1 of question 1', order: 1, score: 2 },
-            { id: 1, description: 'choice 1 of question 1', order: 1, score: 2 },
-            { id: 1, description: 'choice 1 of question 1', order: 1, score: 2 },
-        ]
-    },
-    {
-        id: 2, description: 'Question 1', choices: [
-            { id: 1, description: 'choice 1 of question 1', order: 1, score: 2 },
-            { id: 1, description: 'choice 1 of question 1', order: 1, score: 2 },
-            { id: 1, description: 'choice 1 of question 1', order: 1, score: 2 },
-            { id: 1, description: 'choice 1 of question 1', order: 1, score: 2 },
-            { id: 1, description: 'choice 1 of question 1', order: 1, score: 2 },
-        ]
-    },
-    {
-        id: 3, description: 'Question 1', choices: [
-            { id: 1, description: 'choice 1 of question 1', order: 1, score: 2 },
-            { id: 1, description: 'choice 1 of question 1', order: 1, score: 2 },
-            { id: 1, description: 'choice 1 of question 1', order: 1, score: 2 },
-            { id: 1, description: 'choice 1 of question 1', order: 1, score: 2 },
-            { id: 1, description: 'choice 1 of question 1', order: 1, score: 2 },
-        ]
-    },
-    {
-        id: 4, description: 'Question 1', choices: [
-            { id: 1, description: 'choice 1 of question 1', order: 1, score: 2 },
-            { id: 1, description: 'choice 1 of question 1', order: 1, score: 2 },
-            { id: 1, description: 'choice 1 of question 1', order: 1, score: 2 },
-            { id: 1, description: 'choice 1 of question 1', order: 1, score: 2 },
-            { id: 1, description: 'choice 1 of question 1', order: 1, score: 2 },
-        ]
-    },
-    {
-        id: 5, description: 'Question 1', choices: [
-            { id: 1, description: 'choice 1 of question 1', order: 1, score: 2 },
-            { id: 1, description: 'choice 1 of question 1', order: 1, score: 2 },
-            { id: 1, description: 'choice 1 of question 1', order: 1, score: 2 },
-            { id: 1, description: 'choice 1 of question 1', order: 1, score: 2 },
-            { id: 1, description: 'choice 1 of question 1', order: 1, score: 2 },
-        ]
-    },
-];
+export const MockQuestions = () => {
+    let questions: Question[] = [];
+    let chId: number = 0;
+
+    for (let i = 0; i < 5; i++) {
+        let q = new Question();
+        q.id = i + 1;
+        q.description = 'Question of ' + q.id;
+        q.choices = [];
+        for (let j = 0; j < 5; j++, chId++) {
+            let ch = new Choice();
+            ch.id = chId;
+            ch.description = 'Answer ' + chId + ' of question ' + q.id;
+            ch.score = chId % 5;
+            ch.order = j;
+            q.choices.push(ch);
+        }
+        questions.push(q);
+    }
+
+    return questions;
+}
