@@ -1,6 +1,7 @@
 ﻿import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Tester } from '../../models/tester';
+import { QuizService } from '../../services/quiz.service';
 
 @Component({
   selector: 'app-summary',
@@ -10,12 +11,9 @@ import { Tester } from '../../models/tester';
 export class SummaryComponent implements OnInit {
     public tester: Tester;
 
-    constructor(private activeRoute: ActivatedRoute) {
+    constructor(private activeRoute: ActivatedRoute, private quizSvr: QuizService) {
         this.activeRoute.params.subscribe(params => {
-            this.tester = new Tester(0, params['username'], new Date());
-            this.tester.score = 30;
-            this.tester.maxScore = 50;
-            this.tester.rank = 15;
+            this.tester = this.quizSvr.load(params['username']);
         });
     }
 

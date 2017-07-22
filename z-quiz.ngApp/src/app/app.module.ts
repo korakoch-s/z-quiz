@@ -4,6 +4,8 @@ import { FormsModule } from '@angular/forms';
 
 import { ModalModule } from 'ngx-bootstrap/modal';
 
+import { QuizService } from './services/quiz.service';
+
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { RegisterComponent } from './components/register/register.component';
@@ -25,7 +27,10 @@ import { QuizItemComponent } from './components/quiz-item/quiz-item.component';
         FormsModule,
         ModalModule.forRoot()
     ],
-    providers: [],
+    providers: [
+        { provide: 'API_URL', useValue: 'http://localhost:54322'},
+        QuizService
+    ],
     bootstrap: [AppComponent]
 })
 export class AppModule { }

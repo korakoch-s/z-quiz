@@ -1,6 +1,7 @@
 ﻿import { Component, OnInit, TemplateRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { QuizService } from '../../services/quiz.service';
 
 @Component({
     selector: 'app-register',
@@ -11,7 +12,8 @@ export class RegisterComponent implements OnInit {
     public userName: string;
     public modalRef: BsModalRef;
 
-    constructor(private router: Router, private modalService: BsModalService) { }
+    constructor(private router: Router, private modalService: BsModalService,
+        public quizSvr: QuizService) { }
 
     ngOnInit() {
     }
@@ -22,7 +24,12 @@ export class RegisterComponent implements OnInit {
             this.openAlertModal(template);
             event.stopPropagation();
         } else {
-            this.router.navigate(['/quiz', this.userName]);
+            let tester = this.quizSvr.register(this.userName);
+            if (tester.submittedDate) {
+                this.router.navigate(['/summary', this.userName]);
+            } else {
+                this.router.navigate(['/quiz', this.userName]);
+            }
         }
     }
 

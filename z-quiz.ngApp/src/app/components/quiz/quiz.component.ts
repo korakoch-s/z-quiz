@@ -2,6 +2,7 @@
 import { Router, ActivatedRoute } from '@angular/router';
 import { Question, MockQuestions, Choice } from '../../models/question';
 import { Tester, TestItem, MockTester } from '../../models/tester';
+import { QuizService } from '../../services/quiz.service';
 
 @Component({
     selector: 'app-quiz',
@@ -12,10 +13,11 @@ export class QuizComponent implements OnInit {
     public questions: Question[];
     public tester: Tester;
 
-    constructor(private router: Router, private activeRoute: ActivatedRoute) {
+    constructor(private router: Router, private activeRoute: ActivatedRoute,
+        private quizSvr: QuizService) {
         this.questions = MockQuestions();
         this.activeRoute.params.subscribe(params => {
-            this.tester = MockTester(params['username']);
+            this.tester = this.quizSvr.load(params['username']);
         });
     }
 
@@ -23,11 +25,13 @@ export class QuizComponent implements OnInit {
     }
 
     submitClick() {
+        this.quizSvr.submit(this.tester);
         console.log(JSON.stringify(this.tester));
         this.router.navigate(['/summary', this.tester.name]);
     }
 
     saveClick() {
+        this.quizSvr.save(this.tester);
         this.router.navigate(['/register']);
     }
 
