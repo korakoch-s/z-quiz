@@ -23,34 +23,12 @@ export class QuizComponent implements OnInit {
     }
 
     submitClick() {
+        console.log(JSON.stringify(this.tester));
         this.router.navigate(['/summary', this.tester.name]);
     }
 
     saveClick() {
-        console.log(JSON.stringify(this.tester));
         this.router.navigate(['/register']);
     }
 
-    getTesterSelect(question: Question) {
-        let ans: Choice;
-        let testItem: TestItem;
-        if (this.tester && this.tester.testItems) {
-            let testItem = this.tester.testItems.find(item => {
-                return item.question.id === question.id;
-            });
-        }
-
-        if (!testItem) {
-            testItem = new TestItem();
-            testItem.question = question;
-            testItem.answer = new Choice();
-            if (!this.tester.testItems) {
-                this.tester.testItems = [];
-            }
-            this.tester.testItems.push(testItem);
-        }
-
-        ans = testItem.answer;
-        return ans;
-    }
 }
