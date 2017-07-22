@@ -22,7 +22,7 @@ export class RegisterComponent implements OnInit {
             this.openAlertModal(template);
             event.stopPropagation();
         } else {
-            this.router.navigate(['/quiz', this.userName]);
+            this.router.navigate(['/summary', this.userName]);
         }
     }
 
