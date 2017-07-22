@@ -1,3 +1,12 @@
-<p>
-  quiz works!
-</p>
+﻿<div class="container">
+  <h2>Quiz</h2>
+  <div *ngFor="let question of questions; let i = index">
+    <app-quiz-item [question]="question" [itemNo]="i+1"></app-quiz-item>
+  </div>
+  <br />
+  <div class="text-center">
+    <button class="btn btn-info" (click)="saveClick()">Save</button>
+    <button class="btn btn-primary" (click)="submitClick()">Submit</button>
+  </div>
+  <br />
+</div>
