@@ -1,4 +1,5 @@
 ﻿using log4net;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -21,6 +22,11 @@ namespace z_quiz.api
             config.MessageHandlers.Add(new LogRequestAndResponseHandler());
             config.Formatters.JsonFormatter.SupportedMediaTypes
                     .Add(new MediaTypeHeaderValue("text/html"));
+            config.Formatters.JsonFormatter.SerializerSettings = new JsonSerializerSettings
+            {
+                NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore,
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            };
 
             // Web API routes
             config.MapHttpAttributeRoutes();
