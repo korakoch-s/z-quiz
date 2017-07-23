@@ -1,4 +1,5 @@
-﻿using System;
+﻿using log4net;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -9,16 +10,20 @@ namespace z_quiz.api.Controllers
 {
     public class ValuesController : ApiController
     {
+        private static readonly ILog log =
+            LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         // GET api/values
         public IEnumerable<string> Get()
         {
+            log.Debug("Get call ... 555");
             return new string[] { "value1", "value2" };
         }
 
         // GET api/values/5
         public string Get(int id)
         {
-            return "value";
+            return "value " + id;
         }
 
         // POST api/values
