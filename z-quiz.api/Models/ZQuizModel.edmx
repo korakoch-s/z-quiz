@@ -1,0 +1,121 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl" Namespace="ZQuizModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2005">
+        <EntityContainer Name="ZQuizModelTargetContainer" >
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema xmlns="http://schemas.microsoft.com/ado/2009/11/edm" xmlns:cg="http://schemas.microsoft.com/ado/2006/04/codegeneration" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" Namespace="ZQuizModel" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" annotation:UseStrongSpatialTypes="false">
+        <EntityContainer Name="ZQuizModelContainer" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Testers" EntityType="ZQuizModel.Testers" />
+          <EntitySet Name="Questions" EntityType="ZQuizModel.Questions" />
+          <EntitySet Name="Choices" EntityType="ZQuizModel.Choices" />
+          <AssociationSet Name="QuestionsChoices" Association="ZQuizModel.QuestionsChoices">
+            <End Role="Questions" EntitySet="Questions" />
+            <End Role="Choices" EntitySet="Choices" />
+          </AssociationSet>
+          <EntitySet Name="QuizItems" EntityType="ZQuizModel.QuizItems" />
+          <AssociationSet Name="QuestionsQuizItems" Association="ZQuizModel.QuestionsQuizItems">
+            <End Role="Questions" EntitySet="Questions" />
+            <End Role="QuizItems" EntitySet="QuizItems" />
+          </AssociationSet>
+          <AssociationSet Name="ChoicesQuizItems" Association="ZQuizModel.ChoicesQuizItems">
+            <End Role="Choices" EntitySet="Choices" />
+            <End Role="QuizItems" EntitySet="QuizItems" />
+          </AssociationSet>
+          <AssociationSet Name="TestersQuizItems" Association="ZQuizModel.TestersQuizItems">
+            <End Role="Testers" EntitySet="Testers" />
+            <End Role="QuizItems" EntitySet="QuizItems" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Testers">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" />
+          <Property Name="RegistedDate" Type="Time" Nullable="false" />
+          <Property Name="SubmittedDate" Type="Time" Nullable="false" />
+          <NavigationProperty Name="QuizItems" Relationship="ZQuizModel.TestersQuizItems" FromRole="Testers" ToRole="QuizItems" />
+        </EntityType>
+        <EntityType Name="Questions">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Description" Type="String" Nullable="false" />
+          <NavigationProperty Name="Choices" Relationship="ZQuizModel.QuestionsChoices" FromRole="Questions" ToRole="Choices" />
+          <NavigationProperty Name="QuizItems" Relationship="ZQuizModel.QuestionsQuizItems" FromRole="Questions" ToRole="QuizItems" />
+        </EntityType>
+        <EntityType Name="Choices">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Description" Type="String" Nullable="false" />
+          <Property Name="Score" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Question" Relationship="ZQuizModel.QuestionsChoices" FromRole="Choices" ToRole="Questions" />
+          <NavigationProperty Name="QuizItems" Relationship="ZQuizModel.ChoicesQuizItems" FromRole="Choices" ToRole="QuizItems" />
+        </EntityType>
+        <Association Name="QuestionsChoices">
+          <End Type="ZQuizModel.Questions" Role="Questions" Multiplicity="1" />
+          <End Type="ZQuizModel.Choices" Role="Choices" Multiplicity="*" />
+        </Association>
+        <EntityType Name="QuizItems">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="Question" Relationship="ZQuizModel.QuestionsQuizItems" FromRole="QuizItems" ToRole="Questions" />
+          <NavigationProperty Name="Choice" Relationship="ZQuizModel.ChoicesQuizItems" FromRole="QuizItems" ToRole="Choices" />
+          <NavigationProperty Name="Tester" Relationship="ZQuizModel.TestersQuizItems" FromRole="QuizItems" ToRole="Testers" />
+        </EntityType>
+        <Association Name="QuestionsQuizItems">
+          <End Type="ZQuizModel.Questions" Role="Questions" Multiplicity="1" />
+          <End Type="ZQuizModel.QuizItems" Role="QuizItems" Multiplicity="*" />
+        </Association>
+        <Association Name="ChoicesQuizItems">
+          <End Type="ZQuizModel.Choices" Role="Choices" Multiplicity="1" />
+          <End Type="ZQuizModel.QuizItems" Role="QuizItems" Multiplicity="*" />
+        </Association>
+        <Association Name="TestersQuizItems">
+          <End Type="ZQuizModel.Testers" Role="Testers" Multiplicity="1" />
+          <End Type="ZQuizModel.QuizItems" Role="QuizItems" Multiplicity="*" />
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs" Space="C-S">
+        <Alias Key="Model" Value="ZQuizModel" />
+        <Alias Key="Target" Value="ZQuizModel.Store" />
+        <EntityContainerMapping CdmEntityContainer="ZQuizModelContainer" StorageEntityContainer="ZQuizModelTargetContainer">
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <edmx:Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </edmx:Connection>
+    <edmx:Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </edmx:Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
