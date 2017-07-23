@@ -487,5 +487,11 @@
             </summary>
             <returns>Dummy array of string</returns>
         </member>
+        <member name="T:z_quiz.api.Services.ZQuizService`1">
+            <summary>
+            Implement concret service class.
+            </summary>
+            <typeparam name="TContext">Must be DbContext of ZQuizModel</typeparam>
+        </member>
     </members>
 </doc>

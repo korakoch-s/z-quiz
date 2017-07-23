@@ -42,16 +42,17 @@ namespace z_quiz.api.Services
 
         public Tester Register(string name)
         {
-            var tester = this._db.Testers.Where(tt => tt.Name == name).First();
+            var tester = this._db.Testers.Where(tt => tt.Name == name).SingleOrDefault();
 
             if (tester == null)
             {
                 //Save new tester
-                this._db.Testers.Add(new Tester
+                tester = this._db.Testers.Add(new Tester
                 {
                     Name = name,
                     IsCompleted = false
                 });
+                this._db.SaveChanges();
             }
             else
             {
@@ -129,6 +130,11 @@ namespace z_quiz.api.Services
                     }
                 }
             }
+        }
+
+        public TContext GetContext()
+        {
+            return this._db;
         }
     }
 }
