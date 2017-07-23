@@ -13,6 +13,10 @@ namespace z_quiz.api.Controllers
         private static readonly ILog log =
             LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
+        /// <summary>
+        /// Description for dummy api value get method
+        /// </summary>
+        /// <returns>Dummy array of string</returns>
         // GET api/values
         public IEnumerable<string> Get()
         {
