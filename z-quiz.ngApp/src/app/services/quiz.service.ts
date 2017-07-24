@@ -2,6 +2,9 @@
 import { Tester, MockTester } from '../models/tester';
 import { Question, MockQuestions } from '../models/question';
 import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/do';
 
 @Injectable()
 export class QuizService {
@@ -13,34 +16,62 @@ export class QuizService {
         console.log('API URL: ' + apiUrl);
     }
 
-    public register(name: string): Tester {
+    public register(name: string): Promise<Tester> {
+        //TODO: must implete real http service
+        return new Promise<Tester>(resolve => {
+            this.http.get(`${this.apiUrl}register/${name}`)
+                .subscribe((obj: Tester) => {
+                    this.currentTester = obj;
+                    resolve(this.currentTester);
+                });
+        });
+    }
+
+    public load(name: string): Promise<Tester> {
         //TODO: must implete real http service
 
-        this.http.get(`${this.apiUrl}register/${name}`).subscribe(result => {
-            console.log(JSON.stringify(result));
+        return new Promise<Tester>(resolve => {
+            if (!this.currentTester || this.currentTester.Name != name) {
+                this.http.get(`${this.apiUrl}register/${name}`)
+                    .subscribe((obj: Tester) => {
+                        this.currentTester = obj;
+                        resolve(this.currentTester);
+                    });
+            } else {
+                resolve(this.currentTester);
+            }
         });
 
-        this.currentTester = MockTester(name);
-        return this.currentTester;
     }
 
-    public load(name: string): Tester {
+    public quiz(): Promise<Question[]> {
         //TODO: must implete real http service
-        if (!this.currentTester) {
-            this.currentTester = MockTester(name);
-        }
-        return this.currentTester;
+        return new Promise<Question[]>(resolve => {
+            this.http.get(`${this.apiUrl}quiz`)
+                .subscribe((obj: Question[]) => {
+                    //this.currentTester = new Tester();
+                    //this.currentTester.fillFromJson(obj);
+                    resolve(obj);
+                });
+        });
+
+        //return MockQuestions();
     }
 
-    public quiz(): Question[] {
+    public save(tester: Tester): Promise<any> {
         //TODO: must implete real http service
-        return MockQuestions();
-    }
 
-    public save(tester: Tester): Tester {
-        //TODO: must implete real http service
-        this.currentTester = tester;
-        return tester;
+        return new Promise(resolve => {
+            this.http.post(`${this.apiUrl}save`, tester, options)
+                .subscribe((obj: any) => {
+                    //this.currentTester = new Tester();
+                    //this.currentTester.fillFromJson(obj);
+                    resolve(obj);
+                });
+        });
+
+        //this.currentTester = tester;
+        //return tester;
     }
 
     public submit(tester: Tester): Tester {

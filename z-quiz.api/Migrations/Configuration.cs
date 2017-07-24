@@ -4,6 +4,7 @@ namespace z_quiz.api.Migrations
     using System.Data.Entity;
     using System.Data.Entity.Migrations;
     using System.Linq;
+    using z_quiz.api.Models;
 
     internal sealed class Configuration : DbMigrationsConfiguration<z_quiz.api.Models.ZQuizModel>
     {
@@ -26,6 +27,30 @@ namespace z_quiz.api.Migrations
             //      new Person { FullName = "Rowan Miller" }
             //    );
             //
+
+            //Mock Questions
+            /****************
+            for (int i = 0; i < 5; i++)
+            {
+                Question qt = new Question
+                {
+                    Title = "Question number " + (i + 1),
+                    TotalScore = 10
+                };
+                for (int j = 0; j < 5; j++)
+                {
+                    Choice ch = new Choice
+                    {
+                        Title = "Choice item " + (j + 1) + " of question " + (i + 1),
+                        Score = (j + 1) * 2
+                    };
+                    qt.Choices.Add(ch);
+                }
+                context.Questions.Add(qt);
+            }
+            context.SaveChanges();
+            ******************/
+
         }
     }
 }

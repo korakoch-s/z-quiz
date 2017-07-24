@@ -1,11 +1,13 @@
-﻿export class Question {
+﻿import { BaseModel } from './base-model'; 
+
+export class Question extends BaseModel  {
     public QuestionId: number;
     public Title: string;
     public TotalScore: number;
     public Choices: Choice[];
 }
 
-export class Choice {
+export class Choice extends BaseModel {
     public ChoiceId: number;
     public Title: string;
 }

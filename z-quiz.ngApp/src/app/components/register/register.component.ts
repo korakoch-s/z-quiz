@@ -24,12 +24,13 @@ export class RegisterComponent implements OnInit {
             this.openAlertModal(template);
             event.stopPropagation();
         } else {
-            let tester = this.quizSvr.register(this.userName);
-            if (tester.IsCompleted) {
-                this.router.navigate(['/summary', this.userName]);
-            } else {
-                this.router.navigate(['/quiz', this.userName]);
-            }
+            let tester = this.quizSvr.register(this.userName).then(tester => {
+                if (tester.IsCompleted) {
+                    this.router.navigate(['/summary', this.userName]);
+                } else {
+                    this.router.navigate(['/quiz', this.userName]);
+                }
+            });
         }
     }
 

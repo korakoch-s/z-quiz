@@ -13,7 +13,9 @@ export class SummaryComponent implements OnInit {
 
     constructor(private activeRoute: ActivatedRoute, private quizSvr: QuizService) {
         this.activeRoute.params.subscribe(params => {
-            this.tester = this.quizSvr.load(params['username']);
+            this.quizSvr.load(params['username']).then(tester => {
+                this.tester = tester;
+            });
         });
     }
 

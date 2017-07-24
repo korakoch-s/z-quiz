@@ -13,15 +13,53 @@ export class QuizComponent implements OnInit {
     public questions: Question[];
     public tester: Tester;
 
+    private isQtLoad: boolean = false;
+    private isTesterLoad: boolean = false;
+
     constructor(private router: Router, private activeRoute: ActivatedRoute,
         private quizSvr: QuizService) {
-        this.questions = MockQuestions();
+        //this.questions = MockQuestions();
+        this.quizSvr.quiz().then((qs) => {
+            this.questions = qs;
+            this.isQtLoad = true;
+        });
         this.activeRoute.params.subscribe(params => {
-            this.tester = this.quizSvr.load(params['username']);
+            this.quizSvr.load(params['username']).then(tester => {
+                this.tester = tester;
+                this.isTesterLoad = true;
+            });
         });
     }
 
     ngOnInit() {
+        let timeOutCount: number = 0;
+        const itid = setInterval(() => {
+            if (timeOutCount > 20 || (this.isQtLoad && this.isTesterLoad)) {
+                clearInterval(itid);
+                this.mapTesterQuestions();
+            }
+            timeOutCount++;
+        }, 500);
+    }
+
+    mapTesterQuestions() {
+        if (!(this.isQtLoad && this.isTesterLoad)) {
+            console.log('Timeout loading questions and tester data.');
+            return;
+        }
+
+        this.questions.forEach(qt => {
+            let target = this.tester.TesterQuestions.find(tq => {
+                return tq.Question.QuestionId === qt.QuestionId;
+            });
+
+            if (!target) {
+                target = new TesterQuestion();
+                target.Question = qt;
+                target.Choice = new Choice();
+                this.tester.TesterQuestions.push(target);
+            }
+        });
     }
 
     submitClick() {
@@ -31,8 +69,9 @@ export class QuizComponent implements OnInit {
     }
 
     saveClick() {
-        this.quizSvr.save(this.tester);
-        this.router.navigate(['/register']);
+        this.quizSvr.save(this.tester).then(obj => {
+            this.router.navigate(['/register']);
+        });
     }
 
 }
