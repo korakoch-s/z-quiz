@@ -11,14 +11,13 @@ namespace z_quiz.api.Services
     /// Implement concret service class.
     /// </summary>
     /// <typeparam name="TContext">Must be DbContext of ZQuizModel</typeparam>
-    public class ZQuizService<TContext> : IZQuizService
-        where TContext : ZQuizModel
+    public class ZQuizService : IZQuizService
     {
-        protected readonly TContext _db;
+        protected readonly ZQuizModel _db = new ZQuizModel();
 
-        public ZQuizService(TContext db)
+        public ZQuizService()
         {
-            this._db = db;
+            //this._db = db;
         }
 
         public Tester Load(string name)
@@ -148,7 +147,7 @@ namespace z_quiz.api.Services
 
         }
 
-        public TContext GetContext()
+        public ZQuizModel GetContext()
         {
             return this._db;
         }
