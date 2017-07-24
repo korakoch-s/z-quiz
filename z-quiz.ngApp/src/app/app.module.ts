@@ -1,6 +1,7 @@
 ﻿import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 
 import { ModalModule } from 'ngx-bootstrap/modal';
 
@@ -25,10 +26,11 @@ import { QuizItemComponent } from './components/quiz-item/quiz-item.component';
         BrowserModule,
         AppRoutingModule,
         FormsModule,
-        ModalModule.forRoot()
+        ModalModule.forRoot(),
+        HttpClientModule
     ],
     providers: [
-        { provide: 'API_URL', useValue: 'http://localhost:54322'},
+        { provide: 'API_URL', useValue: 'http://localhost:54958/api/'},
         QuizService
     ],
     bootstrap: [AppComponent]

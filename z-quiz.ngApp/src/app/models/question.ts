@@ -1,14 +1,13 @@
 ﻿export class Question {
-    public id: number;
-    public description: string;
-    public choices: Choice[];
+    public QuestionId: number;
+    public Title: string;
+    public TotalScore: number;
+    public Choices: Choice[];
 }
 
 export class Choice {
-    public id: number;
-    public description: string;
-    public order: number;
-    public score: number;
+    public ChoiceId: number;
+    public Title: string;
 }
 
 export const MockQuestions = () => {
@@ -17,16 +16,14 @@ export const MockQuestions = () => {
 
     for (let i = 0; i < 5; i++) {
         let q = new Question();
-        q.id = i + 1;
-        q.description = 'Question of ' + q.id;
-        q.choices = [];
+        q.QuestionId = i + 1;
+        q.Title = 'Question of ' + q.QuestionId;
+        q.Choices = [];
         for (let j = 0; j < 5; j++, chId++) {
             let ch = new Choice();
-            ch.id = chId;
-            ch.description = 'Answer ' + chId + ' of question ' + q.id;
-            ch.score = chId % 5;
-            ch.order = j;
-            q.choices.push(ch);
+            ch.ChoiceId = chId;
+            ch.Title = 'Answer ' + chId + ' of question ' + q.QuestionId;
+            q.Choices.push(ch);
         }
         questions.push(q);
     }

@@ -25,7 +25,7 @@ export class RegisterComponent implements OnInit {
             event.stopPropagation();
         } else {
             let tester = this.quizSvr.register(this.userName);
-            if (tester.submittedDate) {
+            if (tester.IsCompleted) {
                 this.router.navigate(['/summary', this.userName]);
             } else {
                 this.router.navigate(['/quiz', this.userName]);

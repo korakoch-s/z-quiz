@@ -1,41 +1,39 @@
 ﻿import { Question, Choice, MockQuestions } from './question';
 
 export class Tester {
-    public id: number;
-    public name: string;
-    public registedDate: Date;
-    public submittedDate: Date;
-    public score: number;
-    public maxScore: number;
-    public rank: number;
-    public testItems: TestItem[];
+    public TesterId: number;
+    public Name: string;
+    public IsCompleted: boolean;
+    public Score: number;
+    public TotalScore: number;
+    public Rank: number;
+    public TesterQuestions: TesterQuestion[];
 
-    constructor(id?: number, name?: string, registedDate?: Date) {
-        this.id = id || 0;
-        this.name = name || undefined;
-        this.registedDate = registedDate || new Date();
+    constructor(id?: number, name?: string) {
+        this.TesterId = id || 0;
+        this.Name = name || undefined;
     }
 }
 
-export class TestItem {
-    public question: Question;
-    public answer: Choice;
+export class TesterQuestion {
+    public Question: Question;
+    public Choice: Choice;
 }
 
 export const MockTester = (name: string): Tester => {
-    let tester: Tester = new Tester(1, name, new Date);
+    let tester: Tester = new Tester(1, name);
     let questions: Question[] = MockQuestions();
 
-    tester.score = 20;
-    tester.maxScore = 50;
-    tester.rank = 10;
-    tester.testItems = [];
+    tester.Score = 20;
+    tester.TotalScore = 50;
+    tester.Rank = 10;
+    tester.TesterQuestions = [];
 
     questions.forEach(q => {
-        tester.testItems.push({ question: q, answer: new Choice() });
+        tester.TesterQuestions.push({ Question: q, Choice: new Choice() });
     })
-    tester.testItems[0].answer = questions[0].choices[0];
-    tester.testItems[1].answer = questions[1].choices[2];
+    tester.TesterQuestions[0].Choice = questions[0].Choices[0];
+    tester.TesterQuestions[1].Choice = questions[1].Choices[2];
     
     return tester;
 }

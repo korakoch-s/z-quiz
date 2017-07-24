@@ -1,7 +1,7 @@
 ﻿import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Question, MockQuestions, Choice } from '../../models/question';
-import { Tester, TestItem, MockTester } from '../../models/tester';
+import { Tester, TesterQuestion, MockTester } from '../../models/tester';
 import { QuizService } from '../../services/quiz.service';
 
 @Component({
@@ -27,7 +27,7 @@ export class QuizComponent implements OnInit {
     submitClick() {
         this.quizSvr.submit(this.tester);
         console.log(JSON.stringify(this.tester));
-        this.router.navigate(['/summary', this.tester.name]);
+        this.router.navigate(['/summary', this.tester.Name]);
     }
 
     saveClick() {
