@@ -23,7 +23,7 @@ namespace z_quiz.api.Services
 
         public Tester Load(string name)
         {
-            var tester = this._db.Testers.First(tt => tt.Name == name);
+            var tester = this._db.Testers.Where(tt => tt.Name == name).SingleOrDefault();
 
             if (tester == null)
             {
@@ -31,6 +31,10 @@ namespace z_quiz.api.Services
             }
 
             _db.Entry(tester).Collection(tt => tt.TesterQuestions).Load();
+            if(tester.IsCompleted && (tester.Rank <= 0 || tester.Score <= 0 || tester.TotalScore <= 0))
+            {
+                this._calRank(tester);
+            }
 
             return tester;
         }
@@ -73,27 +77,7 @@ namespace z_quiz.api.Services
         {
             this._save(tester);
 
-            foreach (var tq in tester.TesterQuestions)
-            {
-                tester.Score += tq.Choice.Score;
-                tester.TotalScore += tq.Question.TotalScore;
-            }
-
-            this._db.SaveChanges();
-
-            var testers = this._db.Testers.Where(tt => tt.IsCompleted)
-                .OrderBy(tt => tt.Score);
-
-            tester.Rank = 0;
-            foreach (var tt in testers)
-            {
-                tester.Rank += 1;
-                if (tester.TesterId == tt.TesterId)
-                {
-                    break;
-                }
-            }
-
+            this._calRank(tester);
             tester.IsCompleted = true;
 
             this._db.SaveChanges();
@@ -130,6 +114,33 @@ namespace z_quiz.api.Services
                     }
                 }
             }
+        }
+
+        private void _calRank(Tester tester)
+        {
+            tester.Score = 0;
+            tester.TotalScore = 0;
+            foreach (var tq in tester.TesterQuestions)
+            {
+                tester.Score += tq.Choice.Score;
+                tester.TotalScore += tq.Question.TotalScore;
+            }
+
+            this._db.SaveChanges();
+
+            var testers = this._db.Testers.Where(tt => tt.IsCompleted)
+                .OrderByDescending(tt => tt.Score);
+
+            tester.Rank = 0;
+            foreach (var tt in testers)
+            {
+                tester.Rank += 1;
+                if (tester.TesterId == tt.TesterId)
+                {
+                    break;
+                }
+            }
+
         }
 
         public TContext GetContext()

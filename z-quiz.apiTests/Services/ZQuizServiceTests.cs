@@ -41,12 +41,12 @@ namespace z_quiz.api.Services.Tests
         [TestFixtureTearDown()]
         public void Dispose()
         {
-
+            
             this._service.GetContext().Database.ExecuteSqlCommand("DELETE FROM TesterQuestions");
             this._service.GetContext().Database.ExecuteSqlCommand("DELETE FROM Testers");
             this._service.GetContext().Database.ExecuteSqlCommand("DELETE FROM Choices");
             this._service.GetContext().Database.ExecuteSqlCommand("DELETE FROM Questions");
-
+            
         }
 
         private void mockQuestionData()
@@ -118,6 +118,8 @@ namespace z_quiz.api.Services.Tests
                 };
                 tester.TesterQuestions.Add(tq);
             }
+            //score must be = 40
+            //totalScore must be = 50
             this._service.GetContext().Testers.Add(tester);
 
             tester = new Tester
@@ -148,8 +150,118 @@ namespace z_quiz.api.Services.Tests
 
             Assert.IsNotNull(questions, "Quiz method should not return null.");
             Assert.AreEqual(5, questions.Count(), "Mockup data 5 records but result = " + questions.Count());
-            Assert.AreEqual(5, questions.ElementAt(0).Choices.Count(), 
+            Assert.AreEqual(5, questions.ElementAt(0).Choices.Count(),
                 "Mockup have choices 5 records but got = " + questions.ElementAt(0).Choices.Count());
+        }
+
+        [Test()]
+        public void LoadTest_for_TesterNotExist()
+        {
+            string testerName = "Tester not in database";
+            var tester = this._service.Load(testerName);
+
+            Assert.IsNull(tester, testerName + " should be null");
+        }
+
+        [Test()]
+        public void LoadTest_for_TesterWithoutSave()
+        {
+            string testerName = "Tester without test save";
+            var tester = this._service.Load(testerName);
+
+            Assert.IsNotNull(tester, testerName + " should not be null");
+
+            Assert.IsInstanceOf<Tester>(tester, "Return type should be Models.Tester");
+
+            Assert.AreEqual(testerName, tester.Name, "Name should be '" + testerName + "' but got '" + tester.Name + "'");
+            Assert.That(tester.TesterQuestions == null || tester.TesterQuestions.Count() == 0, "TesterQuestions should be null.");
+            Assert.AreEqual(false, tester.IsCompleted, "IsCompleted status should be false");
+        }
+
+        [Test()]
+        public void LoadTest_for_TesterWithSomeSave()
+        {
+            string testerName = "Tester with some test save";
+            var tester = this._service.Load(testerName);
+
+            Assert.IsNotNull(tester, testerName + " should not be null");
+
+            Assert.IsInstanceOf<Tester>(tester, "Return type should be Models.Tester");
+
+            Assert.AreEqual(testerName, tester.Name, "Name should be '" + testerName + "' but got '" + tester.Name + "'");
+            Assert.IsNotNull(tester.TesterQuestions, "TesterQuestions should not be null.");
+            Assert.AreEqual(false, tester.IsCompleted, "IsCompleted status should be false");
+        }
+
+        [Test()]
+        public void LoadTest_for_TesterWithComplete()
+        {
+            string testerName = "Tester with complete submit but not cal total yet";
+            var tester = this._service.Load(testerName);
+
+            Assert.IsNotNull(tester, testerName + " should not be null");
+
+            Assert.IsInstanceOf<Tester>(tester, "Return type should be Models.Tester");
+
+            Assert.AreEqual(testerName, tester.Name, "Name should be '" + testerName + "' but got '" + tester.Name + "'");
+            Assert.IsNotNull(tester.TesterQuestions, "TesterQuestions should not be null.");
+            Assert.AreEqual(true, tester.IsCompleted, "IsCompleted status should be true");
+            Assert.Greater(tester.Score, 0, "Score should be greater than 0");
+            Assert.Greater(tester.TotalScore, 0, "Total score should be greater than 0");
+            Assert.Greater(tester.Rank, 0, "Rank should be greater than 0");
+        }
+
+        [Test()]
+        public void SaveTest()
+        {
+            string testerName = "Tester with some test save";
+            var tester = this._service.Load(testerName);
+
+            Assert.IsNotNull(tester, testerName + " should not be null");
+            Assert.IsInstanceOf<Tester>(tester, "Return type should be Models.Tester");
+            Assert.AreEqual(testerName, tester.Name, "Name should be '" + testerName + "' but got '" + tester.Name + "'");
+            Assert.IsNotNull(tester.TesterQuestions, "TesterQuestions should not be null.");
+            Assert.AreEqual(false, tester.IsCompleted, "IsCompleted status should be false");
+
+            //modify some data and call save
+            List<TesterQuestion> expTqs = new List<TesterQuestion>();
+            foreach (var tq in tester.TesterQuestions)
+            {
+                //simulate select choice number 2
+                tq.Choice = tq.Question.Choices.ElementAt(2);
+                expTqs.Add(tq);
+            }
+            this._service.Save(tester);
+            tester = this._service.Load(testerName);
+
+            Assert.IsInstanceOf<Tester>(tester, "Return type should be Models.Tester");
+            Assert.AreEqual(expTqs, tester.TesterQuestions.ToList<TesterQuestion>());
+            Assert.IsFalse(tester.IsCompleted, "IsCompleted status should be false");
+        }
+
+        [Test()]
+        public void SubmitTest()
+        {
+            string testerName = "Tester with complete submit but not cal total yet";
+            var tester = this._service.Load(testerName);
+
+            //modify some data and call save
+            int expScore = 0;
+            int expTotal = 0;
+            foreach (var tq in tester.TesterQuestions)
+            {
+                //simulate select choice number 2
+                tq.Choice = tq.Question.Choices.ElementAt(2);
+                expScore += tq.Question.Choices.ElementAt(2).Score;
+                expTotal += tq.Question.TotalScore;
+            }
+
+            //From provide mock dataset score = 30, Total = 50, Rank = 2
+            tester = this._service.Submit(tester);
+            Assert.IsTrue(tester.IsCompleted, "IsCompleted status should be true");
+            Assert.AreEqual(expScore, tester.Score, "Score not correct.");
+            Assert.AreEqual(expTotal, tester.TotalScore, "Total score not correct");
+            Assert.AreEqual(2, tester.Rank, "Rank not correct");
         }
     }
 }
