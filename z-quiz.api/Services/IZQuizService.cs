@@ -7,7 +7,7 @@ using z_quiz.api.Models;
 
 namespace z_quiz.api.Services
 {
-    interface IZQuizService
+    public interface IZQuizService
     {
         Tester Register(string name);
         Tester Load(string name);
