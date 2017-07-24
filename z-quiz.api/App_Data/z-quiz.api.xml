@@ -481,6 +481,18 @@
             </summary>
             <param name="documentPath">The physical path to XML document.</param>
         </member>
+        <member name="M:z_quiz.api.Controllers.loadController.Get(System.String)">
+            <summary>
+            Load all questions to do a quiz session.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:z_quiz.api.Controllers.quizController.Get">
+            <summary>
+            Load all questions to do a quiz session.
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:z_quiz.api.Controllers.registerController.Get(System.String)">
             <summary>
             Register new tester.
@@ -488,13 +500,26 @@
             <param name="name">Name of tester</param>
             <returns>Tester object json</returns>
         </member>
+        <member name="M:z_quiz.api.Controllers.saveController.Post(z_quiz.api.Models.Tester)">
+            <summary>
+            Save current tester data
+            </summary>
+            <param name="tester">Tester with test question answer.</param>
+        </member>
+        <member name="M:z_quiz.api.Controllers.submitController.Post(z_quiz.api.Models.Tester)">
+            <summary>
+            Submit quiz session to evaluate score and rank
+            </summary>
+            <param name="tester"></param>
+            <returns>Tester with score and rank result</returns>
+        </member>
         <member name="M:z_quiz.api.Controllers.ValuesController.Get">
             <summary>
             Description for dummy api value get method
             </summary>
             <returns>Dummy array of string</returns>
         </member>
-        <member name="T:z_quiz.api.Services.ZQuizService">
+        <member name="T:z_quiz.api.Services.ZQuizService`1">
             <summary>
             Implement concret service class.
             </summary>
