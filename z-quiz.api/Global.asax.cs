@@ -32,5 +32,13 @@ namespace z_quiz.api
 
             Server.ClearError();
         }
+
+        protected void Application_BeginRequest(Object sender, EventArgs e)
+        {
+            if (HttpContext.Current.Request.HttpMethod == "OPTIONS")
+            {
+                HttpContext.Current.Response.End();
+            }
+        }
     }
 }

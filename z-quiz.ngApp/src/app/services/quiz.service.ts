@@ -1,7 +1,7 @@
 ﻿import { Injectable, Inject } from '@angular/core';
 import { Tester, MockTester } from '../models/tester';
 import { Question, MockQuestions } from '../models/question';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/do';
@@ -62,7 +62,7 @@ export class QuizService {
         //TODO: must implete real http service
 
         return new Promise(resolve => {
-            this.http.post(`${this.apiUrl}save`, tester, options)
+            this.http.post(`${this.apiUrl}save`, tester)
                 .subscribe((obj: any) => {
                     //this.currentTester = new Tester();
                     //this.currentTester.fillFromJson(obj);
