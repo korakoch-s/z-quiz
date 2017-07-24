@@ -33,6 +33,8 @@ namespace z_quiz.api.Services
             _db.Entry(tester).Collection(tt => tt.TesterQuestions).Load();
             if(tester.IsCompleted && (tester.Rank <= 0 || tester.Score <= 0 || tester.TotalScore <= 0))
             {
+                this._calScore(tester);
+                this._db.SaveChanges();
                 this._calRank(tester);
             }
 
@@ -61,7 +63,7 @@ namespace z_quiz.api.Services
             else
             {
                 //Load current
-                _db.Entry(tester).Collection(tt => tt.TesterQuestions).Load();
+                return this.Load(name);
             }
 
             return tester;
@@ -75,6 +77,7 @@ namespace z_quiz.api.Services
 
         public Tester Submit(Tester tester)
         {
+            this._calScore(tester);
             this._save(tester);
 
             this._calRank(tester);
@@ -116,7 +119,7 @@ namespace z_quiz.api.Services
             }
         }
 
-        private void _calRank(Tester tester)
+        private void _calScore(Tester tester)
         {
             tester.Score = 0;
             tester.TotalScore = 0;
@@ -125,8 +128,10 @@ namespace z_quiz.api.Services
                 tester.Score += tq.Choice.Score;
                 tester.TotalScore += tq.Question.TotalScore;
             }
+        }
 
-            this._db.SaveChanges();
+        private void _calRank(Tester tester)
+        {
 
             var testers = this._db.Testers.Where(tt => tt.IsCompleted)
                 .OrderByDescending(tt => tt.Score);

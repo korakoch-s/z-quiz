@@ -22,22 +22,6 @@ namespace z_quiz.api.Services.Tests
             this.mockTester();
         }
 
-        [Test()]
-        public void RegisterTest()
-        {
-            string testName = "Tester_Name";
-            var tester = this._service.Register(testName);
-
-            Assert.IsNotNull(tester);
-            Assert.AreEqual(testName, tester.Name);
-
-            int id1 = tester.TesterId;
-            var tester2 = this._service.Register(testName);
-            Assert.IsNotNull(tester2);
-            Assert.AreEqual(testName, tester2.Name);
-            Assert.AreEqual(id1, tester2.TesterId, "Register with the same name must not create new record.");
-        }
-
         [TestFixtureTearDown()]
         public void Dispose()
         {
@@ -118,8 +102,6 @@ namespace z_quiz.api.Services.Tests
                 };
                 tester.TesterQuestions.Add(tq);
             }
-            //score must be = 40
-            //totalScore must be = 50
             this._service.GetContext().Testers.Add(tester);
 
             tester = new Tester
@@ -140,7 +122,60 @@ namespace z_quiz.api.Services.Tests
             tester.TotalScore = 50;
             this._service.GetContext().Testers.Add(tester);
 
+            tester = new Tester
+            {
+                Name = "Tester with complete Full score",
+                IsCompleted = true
+            };
+            foreach (var qt in questions)
+            {
+                TesterQuestion tq = new TesterQuestion
+                {
+                    Question = qt,
+                    Choice = qt.Choices.ElementAt(4)
+                };
+                tester.TesterQuestions.Add(tq);
+            }
+            tester.Score = 50;
+            tester.TotalScore = 50;
+            this._service.GetContext().Testers.Add(tester);
+
             this._service.GetContext().SaveChanges();
+        }
+
+        [Test()]
+        public void RegisterTest()
+        {
+            string testName = "Tester_Name";
+            var tester = this._service.Register(testName);
+
+            Assert.IsNotNull(tester);
+            Assert.AreEqual(testName, tester.Name);
+
+            int id1 = tester.TesterId;
+            var tester2 = this._service.Register(testName);
+            Assert.IsNotNull(tester2);
+            Assert.AreEqual(testName, tester2.Name);
+            Assert.AreEqual(id1, tester2.TesterId, "Register with the same name must not create new record.");
+        }
+
+        [Test()]
+        public void RegisterTest_for_Complete()
+        {
+            string testerName = "Tester with complete Full score";
+            var tester = this._service.Register(testerName);
+
+            Assert.IsNotNull(tester, testerName + " should not be null");
+
+            Assert.IsInstanceOf<Tester>(tester, "Return type should be Models.Tester");
+
+            Assert.AreEqual(testerName, tester.Name, "Name should be '" + testerName + "' but got '" + tester.Name + "'");
+            Assert.IsNotNull(tester.TesterQuestions, "TesterQuestions should not be null.");
+            Assert.IsTrue(tester.IsCompleted, "IsCompleted status should be true");
+            Assert.AreEqual( 50, tester.Score, "Score not correct");
+            Assert.AreEqual( 50, tester.TotalScore, "Total score not correct");
+            Assert.AreEqual(1, tester.Rank, "Rank not correct");
+
         }
 
         [Test()]
