@@ -42,7 +42,7 @@ export class QuizComponent implements OnInit {
         }, 500);
     }
 
-    mapTesterQuestions() {
+    private mapTesterQuestions() {
         if (!(this.isQtLoad && this.isTesterLoad)) {
             console.log('Timeout loading questions and tester data.');
             return;
@@ -50,15 +50,27 @@ export class QuizComponent implements OnInit {
 
         this.questions.forEach(qt => {
             let target = this.tester.TesterQuestions.find(tq => {
-                return tq.Question.QuestionId === qt.QuestionId;
+                return tq.QuestionId === qt.QuestionId;
             });
 
             if (!target) {
                 target = new TesterQuestion();
+                target.QuestionId = qt.QuestionId;
                 target.Question = qt;
                 target.Choice = new Choice();
                 this.tester.TesterQuestions.push(target);
+            } else {
+                target.Question = qt;
+                if (target.AnswerId > 0) {
+                    //already have answer
+                    target.Choice = qt.Choices.find(ch => {
+                        return ch.ChoiceId == target.AnswerId;
+                    });
+                } else {
+                    target.Choice = new Choice();
+                }
             }
+
         });
     }
 

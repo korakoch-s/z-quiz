@@ -20,6 +20,9 @@ export class Tester extends BaseModel {
 export class TesterQuestion extends BaseModel {
     public Question: Question;
     public Choice: Choice;
+    public TesterId: number;
+    public QuestionId: number;
+    public AnswerId: number;
 }
 
 export const MockTester = (name: string): Tester => {

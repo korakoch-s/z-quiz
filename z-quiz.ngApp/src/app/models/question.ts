@@ -10,6 +10,7 @@ export class Question extends BaseModel  {
 export class Choice extends BaseModel {
     public ChoiceId: number;
     public Title: string;
+    public QuestionId: number;
 }
 
 export const MockQuestions = () => {

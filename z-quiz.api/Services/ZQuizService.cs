@@ -98,6 +98,7 @@ namespace z_quiz.api.Services
             {
                 foreach (var tq in tester.TesterQuestions)
                 {
+                    tq.TesterId = tester.TesterId;
                     var exTq = exTester.TesterQuestions
                         .Where(c => (c.TesterId == tq.TesterId && c.QuestionId == tq.QuestionId))
                         .SingleOrDefault();
@@ -111,7 +112,7 @@ namespace z_quiz.api.Services
                         {
                             TesterId = tq.TesterId,
                             QuestionId = tq.QuestionId,
-                            AnswerId = tq.AnswerId
+                            AnswerId = tq.Choice.ChoiceId,
                         };
                         exTester.TesterQuestions.Add(newTq);
                     }
