@@ -75,9 +75,10 @@ export class QuizComponent implements OnInit {
     }
 
     submitClick() {
-        this.quizSvr.submit(this.tester);
-        console.log(JSON.stringify(this.tester));
-        this.router.navigate(['/summary', this.tester.Name]);
+        this.quizSvr.submit(this.tester).then(tester => {
+            console.log(JSON.stringify(this.tester));
+            this.router.navigate(['/summary', this.tester.Name]);
+        });
     }
 
     saveClick() {

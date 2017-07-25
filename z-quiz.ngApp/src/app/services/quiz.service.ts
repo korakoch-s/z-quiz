@@ -61,6 +61,10 @@ export class QuizService {
     public save(tester: Tester): Promise<any> {
         //TODO: must implete real http service
 
+        tester.TesterQuestions.forEach(tq => {
+            tq.AnswerId = tq.Choice.ChoiceId;
+        });
+
         return new Promise(resolve => {
             this.http.post(`${this.apiUrl}save`, tester)
                 .subscribe((obj: any) => {
@@ -74,8 +78,20 @@ export class QuizService {
         //return tester;
     }
 
-    public submit(tester: Tester): Tester {
+    public submit(tester: Tester): Promise<Tester> {
         //TODO: must implete real http service
+
+        tester.TesterQuestions.forEach(tq => {
+            tq.AnswerId = tq.Choice.ChoiceId;
+        });
+
+        return new Promise<Tester>(resolve => {
+            this.http.post(`${this.apiUrl}submit`, tester)
+                .subscribe((obj: Tester) => {
+                    this.currentTester = obj;
+                    resolve(this.currentTester);
+                });
+        });
 
         //let score: number = 0;
         //let total: number = 0;
@@ -89,13 +105,14 @@ export class QuizService {
         //        }));
         //    }
         //});
-        tester.Score = 10;
-        tester.TotalScore = 50;
-        tester.Rank = 10;
-        tester.IsCompleted = true;
 
-        this.currentTester = tester;
+        //tester.Score = 10;
+        //tester.TotalScore = 50;
+        //tester.Rank = 10;
+        //tester.IsCompleted = true;
 
-        return tester;
+        //this.currentTester = tester;
+
+        //return tester;
     }
 }

@@ -77,25 +77,26 @@ namespace z_quiz.api.Services
 
         public Tester Submit(Tester tester)
         {
-            this._calScore(tester);
-            this._save(tester);
 
-            this._calRank(tester);
+            tester = this._save(tester);
+            this._calScore(tester);
+
             tester.IsCompleted = true;
+            this._calRank(tester);
 
             this._db.SaveChanges();
 
             return tester;
         }
 
-        private void _save(Tester tester)
+        private Tester _save(Tester tester)
         {
             var exTester = this._db.Testers.Where(tt => tt.TesterId == tester.TesterId)
                 .Include(tt => tt.TesterQuestions)
                 .SingleOrDefault();
-
             if (exTester != null)
             {
+                this._db.Entry(exTester).CurrentValues.SetValues(tester);
                 foreach (var tq in tester.TesterQuestions)
                 {
                     tq.TesterId = tester.TesterId;
@@ -105,6 +106,9 @@ namespace z_quiz.api.Services
                     if (exTq != null)
                     {
                         this._db.Entry(exTq).CurrentValues.SetValues(tq);
+                        exTq.AnswerId = tq.AnswerId;
+                        exTq.QuestionId = tq.QuestionId;
+                        exTq.TesterId = tq.TesterId;
                     }
                     else
                     {
@@ -117,18 +121,35 @@ namespace z_quiz.api.Services
                         exTester.TesterQuestions.Add(newTq);
                     }
                 }
+                tester = exTester;
             }
+
+            return tester;
         }
 
-        private void _calScore(Tester tester)
+        private Tester _calScore(Tester tester)
         {
             tester.Score = 0;
             tester.TotalScore = 0;
             foreach (var tq in tester.TesterQuestions)
             {
+                if(tq.AnswerId > 0)
+                {
+                    var ch = this._db.Choices.Find(tq.AnswerId);
+                    tq.Choice = ch;
+                }
+
+                if (tq.QuestionId > 0)
+                {
+                    var qt = this._db.Questions.Find(tq.QuestionId);
+                    tq.Question = qt;
+                }
+
                 tester.Score += tq.Choice.Score;
                 tester.TotalScore += tq.Question.TotalScore;
             }
+
+            return tester;
         }
 
         private void _calRank(Tester tester)
@@ -137,14 +158,14 @@ namespace z_quiz.api.Services
             var testers = this._db.Testers.Where(tt => tt.IsCompleted)
                 .OrderByDescending(tt => tt.Score);
 
-            tester.Rank = 0;
+            tester.Rank = 1;
             foreach (var tt in testers)
             {
-                tester.Rank += 1;
-                if (tester.TesterId == tt.TesterId)
+                if (tester.Score >= tt.Score)
                 {
                     break;
                 }
+                tester.Rank += 1;
             }
 
         }
