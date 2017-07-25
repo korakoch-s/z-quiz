@@ -37,6 +37,12 @@ namespace z_quiz.api
         {
             if (HttpContext.Current.Request.HttpMethod == "OPTIONS")
             {
+                HttpContext.Current.Response.AddHeader("Access-Control-Allow-Headers", "content-type");
+                HttpContext.Current.Response.StatusCode = 200;
+                //HttpContext.Current.Response.AddHeader("Access-Control-Allow-Origin", "*");
+                //HttpContext.Current.Response.AddHeader("Access-Control-Allow-Credentials", "true");
+                HttpContext.Current.Response.AddHeader("Access-Control-Allow-Methods", "POST,GET,OPTIONS");
+                HttpContext.Current.Response.AddHeader("Content-Type", "application/json");
                 HttpContext.Current.Response.End();
             }
         }
